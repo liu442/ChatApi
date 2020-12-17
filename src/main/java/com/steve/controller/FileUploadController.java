@@ -62,6 +62,7 @@ public class FileUploadController {
             List<OSSFileResp> list = new ArrayList<>();
             for (MultipartFile file: files) {
                 MinioUploadDto minioUploadDto = minioService.upload(file);
+
                 OSSFileResp ossFileResp= new OSSFileResp();
                 ossFileResp.setFileName(file.getOriginalFilename());
                 ossFileResp.setOssFileName(minioUploadDto.getUrl());
