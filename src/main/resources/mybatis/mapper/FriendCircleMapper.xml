@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.steve.mapper.FriendCircleMapper" >
+
+    <select id="friendCircles"  resultType="com.steve.pojo.resp.FriendCircleResp">
+       SELECT
+            fc.id as id,
+            fc.user_id as userId,
+            fc.content as content,
+            fc.image as image,
+            fc.location as location,
+            fc.create_time as createTime,
+            u.nickname as nickName,
+            u.face_image as headImage
+        FROM
+            user u ,friend_circle fc where
+            u.id=fc.user_id and
+            (fc.user_id in
+            (select my_friend_user_id FROM my_friends mf where mf.my_user_id=#{userId})
+             or fc.user_id =#{userId}
+            )
+        order by  fc.create_time DESC
+    </select>
+
+</mapper>

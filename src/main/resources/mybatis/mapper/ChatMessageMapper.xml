@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.steve.mapper.ChatMessageMapper" >
+
+    <select id="getChatMessage"  resultType="com.steve.pojo.ChatMsg">
+       select
+       cm.id as id,
+       cm.send_user_id as sendUserId,
+       cm.accept_user_id as acceptUserId,
+       cm.msg as msg,
+       cm.sign_flag as signFlag,
+       cm.create_time as createTime
+       from chat_msg cm
+       where
+        (cm.send_user_id = #{sendUserId} AND cm.accept_user_id = #{acceptUserId})
+        or
+        (cm.send_user_id = #{acceptUserId} AND cm.accept_user_id = #{sendUserId})
+    </select>
+
+</mapper>

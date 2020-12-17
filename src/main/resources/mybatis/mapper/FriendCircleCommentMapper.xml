@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.steve.mapper.FriendCircleCommentMapper" >
+
+    <select id="getComments"  resultType="com.steve.pojo.resp.CommentResp">
+       SELECT
+            fcc.id as id,
+            fcc.circle_id as circleId,
+            fcc.comment_id as commentId,
+            fcc.content as content,
+            fcc.reply_id as replyId,
+            (select nickname from user u2 where u2.id=fcc.reply_id) as replyNickName,
+            fcc.type as type,
+            fcc.create_time as createTime,
+            u.nickname as nickName,
+            u.face_image as headImage
+        FROM
+           friend_circle_comment fcc,user u
+        where fcc.comment_id=u.id
+        and fcc.circle_id=#{circleId}
+        and fcc.type!=1
+        order by  fcc.create_time
+    </select>
+
+    <select id="getLikes"  resultType="com.steve.pojo.resp.CommentResp">
+       SELECT
+            fcc.id as id,
+            fcc.circle_id as circleId,
+            fcc.comment_id as commentId,
+            fcc.content as content,
+            fcc.reply_id as replyId,
+            (select nickname from user u2 where u2.id=fcc.reply_id) as replyNickName,
+            fcc.type as type,
+            fcc.create_time as createTime,
+            u.nickname as nickName,
+            u.face_image as headImage
+        FROM
+           friend_circle_comment fcc,user u
+        where fcc.comment_id=u.id
+        and fcc.circle_id=#{circleId}
+        and fcc.type=1
+        order by  fcc.create_time DESC
+    </select>
+</mapper>

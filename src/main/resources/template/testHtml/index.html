@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<body>
+		
+		<div>发送消息:</div>
+		<input type="text" id="msgContent"/>
+		<input type="button" value="点我发送" onclick="CHAT.chat()"/>
+		
+		<div>接受消息：</div>
+		<div id="receiveMsg" style="background-color: gainsboro;"></div>
+		
+		<script type="application/javascript">
+			
+			var heartCheck = 
+				setInterval("CHAT.keepalive();",30000);
+			window.CHAT = {
+				socket: null,
+				init: function() {
+					if (window.WebSocket) {
+						CHAT.socket = new WebSocket("ws://127.0.0.1:8088/ws");
+						CHAT.socket.onopen = function() {
+							console.log("连接建立成功...");
+							
+							var dataContent = {
+								action : 1,
+								chatMsg: {
+									sendUserId : 'f3aecf2877ed40738971f95a5481069b',
+									acceptUserId : '',
+									msg : '建立链接时候发送数据，在后台将发送者的 id 和 channel 绑定起来',
+									msgId : '111',
+								},
+								extand : null,
+							}
+							CHAT.socket.send(JSON.stringify(dataContent));
+							//建立连接之后获取用户未读消息
+							//TODO
+							
+							//定时发送心跳检测 10s
+							heartCheck;
+							//setInterval("CHAT.keepalive();",10000);
+						},
+						CHAT.socket.onclose = function() {
+							clearInterval(heartCheck);
+							console.log("连接关闭...");
+						},
+						CHAT.socket.onerror = function() {
+							clearInterval(heartCheck);
+							console.log("发生错误...");
+						},
+						CHAT.socket.onmessage = function(e) {
+							console.log("接受到消息：" + e.data);
+							var receiveMsg = document.getElementById("receiveMsg");
+							var html = receiveMsg.innerHTML;
+							receiveMsg.innerHTML = html + "<br/>" + e.data;
+						}
+					} else {
+						alert("浏览器不支持websocket协议...");
+					}
+				},
+				chat: function() {
+					var msg = document.getElementById("msgContent");
+					var dataContent = {
+						action : 2,
+						chatMsg: {
+							sendUserId : 'f3aecf2877ed40738971f95a5481069b',
+							acceptUserId : '2edb7435eccb458cb62cc26ccbb18e53',
+							msg : msg.value,
+							msgId : '111',
+						},
+						extand : null,
+				    }
+					CHAT.socket.send(JSON.stringify(dataContent));
+				},
+				keepalive: function(){
+				//发送心跳检测
+					var dataContent = {
+							action : 4,
+							chatMsg: {
+								sendUserId : '',
+								acceptUserId : '',
+								msg : '发送心跳',
+								msgId : '',
+							},
+							extand : null,
+						}
+					CHAT.socket.send(JSON.stringify(dataContent));
+				}
+			};
+			
+			CHAT.init();
+			
+		</script>
+	</body>
+</html>
