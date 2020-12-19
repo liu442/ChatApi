@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.steve.mapper.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.steve.pojo.User" >
+<mapper namespace="com.chat.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.chat.pojo.User" >
     <!--
       WARNING - @mbg.generated
     -->
@@ -15,7 +15,7 @@
     <result column="cid" property="cid" jdbcType="VARCHAR" />
   </resultMap>
 
-  <select id="getMyfriends" resultType="com.steve.pojo.User">
+  <select id="getMyfriends" resultType="com.chat.pojo.User">
    select
    u.id,
    u.username,
